@@ -22,6 +22,16 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
+class Manage(webapp2.RequestHandler):
+    def get(self):
+        template_values = {
+            'template_test': "You're the administrator!"
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+        self.response.write(template.render(template_values))
+
+
 class Post(ndb.Model):
     """Models a blog post"""
     title = ndb.StringProperty(indexed=False)  # Set index to True?
@@ -32,4 +42,5 @@ class Post(ndb.Model):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
+    ('/admin/', Manage)
 ], debug=True)

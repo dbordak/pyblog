@@ -14,6 +14,10 @@ handlers:
 - url: /.*
   script: blargh.application 
 
+- url: /admin/.*
+  script: blargh.application
+  login: admin
+  
 libraries:
 - name: webapp2
   version: 2.5.2
