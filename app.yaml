@@ -11,12 +11,12 @@ handlers:
 - url: /js
   static_dir: static/js
 
-- url: /.*
-  script: blargh.application 
-
 - url: /admin/.*
   script: blargh.application
   login: admin
+
+- url: /.*
+  script: blargh.application
   
 libraries:
 - name: webapp2
