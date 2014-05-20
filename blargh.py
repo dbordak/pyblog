@@ -15,7 +15,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class MainPage(webapp2.RequestHandler):
     def get(self):
         template_values = {
-            'template_test': "Hello, World!"
+            'template_test': "This is a test of Jinja2."
         }
 
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')

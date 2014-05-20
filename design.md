@@ -27,3 +27,5 @@
 * Wrote the next part of the Tutorial before deciding this was too far off-topic.
 * Modelled a Blog Post (?)
 * Hello World with Jinja2
+* Initial use of CSS
+* Threw HTML5 Boilerplate on top of everything.
