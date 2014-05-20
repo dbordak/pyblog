@@ -26,3 +26,4 @@
 * Wrote Hello World with Webapp2
 * Wrote the next part of the Tutorial before deciding this was too far off-topic.
 * Modelled a Blog Post (?)
+* Hello World with Jinja2
