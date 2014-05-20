@@ -5,9 +5,12 @@ api_version: 1
 threadsafe: true
 
 handlers:
-- url: /stylesheets
+- url: /css
   static_dir: static/stylesheets
-  
+
+- url: /js
+  static_dir: static/js
+
 - url: /.*
   script: blargh.application 
 
