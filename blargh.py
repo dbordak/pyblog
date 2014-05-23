@@ -13,6 +13,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 class MainPage(webapp2.RequestHandler):
+    """Display for blog posts"""
     def get(self):
         template_values = {
             'template_test': "This is a test of Jinja2."
@@ -23,6 +24,7 @@ class MainPage(webapp2.RequestHandler):
 
 
 class Manage(webapp2.RequestHandler):
+    """Administration panel for (adding? modifying?) posts"""
     def get(self):
         template_values = {
             'template_test': "You're the administrator!"

@@ -19,7 +19,7 @@
 ###Later
 
 * Memory Caching
-* Rewrite in Go (Revel?)
+* Rewrite in Go
 
 ###Progress
 
