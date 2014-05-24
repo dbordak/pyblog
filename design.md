@@ -29,3 +29,4 @@
 * Hello World with Jinja2
 * Initial use of CSS
 * Threw HTML5 Boilerplate on top of everything.
+* Somewhat functioning database store/retrieval
