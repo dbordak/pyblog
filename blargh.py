@@ -6,10 +6,8 @@ from google.appengine.ext import ndb  # Data modelling using DataStore
 import webapp2
 import jinja2
 
-
 JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-    extensions=['jinja2.ext.autoescape'])
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 
 class MainPage(webapp2.RequestHandler):
@@ -32,7 +30,8 @@ class Manage(webapp2.RequestHandler):
     """Administration panel for (adding? modifying?) entries"""
     def get(self):
         template_values = {
-            'template_test': "You're the administrator!"
+            'template_test': "Post a post with a POST to this URL to post that"
+            + " post onto the blog, posthaste!"
         }
 
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
