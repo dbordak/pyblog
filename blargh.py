@@ -16,10 +16,12 @@ class MainPage(webapp2.RequestHandler):
         blog = self.request.get('blog', 'blog')
         entry_query = Entry.query(
             ancestor=entry_key(blog)).order(-Entry.date)
-        entry_contents = (entry.content for entry in entry_query.fetch(10))
+        entries = entry_query.fetch(10)
+        line = (entry.title + "<br>" + entry.content for entry in entries)
 
         template_values = {
-            'template_test': r"</p><p>".join(entry_contents)
+            'page_heading': "This is a Hello World.",
+            'entry_list': "<ul><li>" + "</li><li>".join(line) + "</li></ul>"
         }
 
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
@@ -30,7 +32,8 @@ class Manage(webapp2.RequestHandler):
     """Administration panel for (adding? modifying?) entries"""
     def get(self):
         template_values = {
-            'template_test': "Post a post with a POST to this URL to post that"
+            'page_heading': "This is the administration page",
+            'entry_list': "Post a post with a POST to this URL to post that"
             + " post onto the blog, posthaste!"
         }
 

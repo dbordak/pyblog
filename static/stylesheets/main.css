@@ -98,14 +98,11 @@ textarea {
    ========================================================================== */
 
 body {
+	background: #fdf6e3;
+	color: #073642;
 	font-family: 'Source Sans Pro', sans-serif;
+	text-align: center;
 }
-
-
-
-
-
-
 
 /* ==========================================================================
    Helper classes
