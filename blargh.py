@@ -10,18 +10,23 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 
+def genSidebar(blog):
+    """Generate the contents of the navigation sidebar."""
+    entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
+    entries = entry_query.fetch(10)
+    line = ("<a href=/" + entry.title + "/>" + entry.title + "</a>"
+            for entry in entries)
+    return "<br>".join(line)
+
+
 class MainPage(webapp2.RequestHandler):
     """Display for blog entries"""
     def get(self):
-        blog = self.request.get('blog', 'blog')
-        entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
-        entries = entry_query.fetch(10)
-        line = ("<a href=/" + entry.title + "/>" + entry.title + "</a>"
-                for entry in entries)
-
+        entry_list = genSidebar(self.request.get('blog', 'blog'))
         template_values = {
-            'page_heading': "This is a Hello World.",
-            'entry_list': "<br>".join(line)
+            'heading': "Main Page",
+            'body': "This is the main page of a blog.",
+            'entry_list': entry_list
         }
 
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
@@ -31,10 +36,12 @@ class MainPage(webapp2.RequestHandler):
 class Manage(webapp2.RequestHandler):
     """Administration panel for (adding? modifying?) entries"""
     def get(self):
+        entry_list = genSidebar(self.request.get('blog', 'blog'))
         template_values = {
-            'page_heading': "This is the administration page",
-            'entry_list': "Post a post with a POST to this URL to post that"
-            + " post onto the blog, posthaste!"
+            'heading': "Administation",
+            'body': "This is the administration page. Post a post with a POST"
+            + " to this URL to post that post onto the blog, posthaste!",
+            'entry_list': entry_list
         }
 
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
