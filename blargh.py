@@ -16,11 +16,12 @@ class MainPage(webapp2.RequestHandler):
         blog = self.request.get('blog', 'blog')
         entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
         entries = entry_query.fetch(10)
-        line = (entry.title for entry in entries)
+        line = ("<a href=/" + entry.title + "/>" + entry.title + "</a>"
+                for entry in entries)
 
         template_values = {
             'page_heading': "This is a Hello World.",
-            'entry_list': "<ul><li>" + "</li><li>".join(line) + "</li></ul>"
+            'entry_list': "<br>".join(line)
         }
 
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
