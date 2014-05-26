@@ -2,7 +2,8 @@
 
 import os
 import urllib
-from google.appengine.ext import ndb  # Data modelling using DataStore
+from google.appengine.ext import ndb
+from google.appengine.api import users
 import webapp2
 import jinja2
 
@@ -10,19 +11,22 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 
-def genSidebar(blog):
+def genSidebar(blog, user=None):
     """Generate the contents of the navigation sidebar."""
     entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
     entries = entry_query.fetch(10)
-    line = ("<a href=/" + entry.title + "/>" + entry.title + "</a>"
-            for entry in entries)
+    line = ['<a href=/"' + entry.title + '"/>' + entry.title + "</a>"
+            for entry in entries]
+    if user and users.is_current_user_admin():
+        line.append('<br><a href="/admin/" />Admin Page</a>')
     return "<br>".join(line)
 
 
 class MainPage(webapp2.RequestHandler):
     """Display for blog entries"""
     def get(self):
-        entry_list = genSidebar(self.request.get('blog', 'blog'))
+        entry_list = genSidebar(self.request.get('blog', 'blog'),
+                                users.get_current_user())
         template_values = {
             'heading': "Main Page",
             'body': "This is the main page of a blog.",
