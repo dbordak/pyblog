@@ -14,10 +14,9 @@ class MainPage(webapp2.RequestHandler):
     """Display for blog entries"""
     def get(self):
         blog = self.request.get('blog', 'blog')
-        entry_query = Entry.query(
-            ancestor=entry_key(blog)).order(-Entry.date)
+        entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
         entries = entry_query.fetch(10)
-        line = (entry.title + "<br>" + entry.content for entry in entries)
+        line = (entry.title for entry in entries)
 
         template_values = {
             'page_heading': "This is a Hello World.",
