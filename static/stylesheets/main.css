@@ -99,27 +99,23 @@ textarea {
 
 body {
     color: #073642;
+	background: #fdf6e3;
     font-family: 'Source Sans Pro', sans-serif;
 }
 
-#container {
-    height: 100%;
-    min-height: 100%;
-    background: #cc0000;
-    overflow: auto;
-    padding-bottom: 100px;
+aside {
+	position: fixed;
+	width: 240px;
+	height: 100%;
+	top: 0;
+	left: 0;
+padding: 20px;
+	background: #eee8d5;
 }
 
 #content {
     margin: 0px 0px 0px 300px;
     background: #fdf6e3;
-    padding: 20px;
-}
-   
-#sidebar {
-    float: left;
-    background: #eee8d5;
-    width: 260px;
     padding: 20px;
 }
 
