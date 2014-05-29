@@ -25,7 +25,7 @@
 
 * Wrote Hello World with Webapp2
 * Wrote the next part of the Tutorial before deciding this was too far off-topic.
-* Modelled a Blog Post (?)
+* Modelled a Blog Post
 * Hello World with Jinja2
 * Initial use of CSS
 * Threw HTML5 Boilerplate on top of everything.
@@ -33,3 +33,13 @@
 * Redid CSS, attempted to do two column layout.
 * Discovered existence of <aside>, applied it.
 * Also <article> and <nav>
+
+###Immediate TODOs:
+
+* Post pages, URLs
+* Administration page
+  * Embedded editor
+  * Post deletion
+* Dedicated navigation page
+  * Sidebar for basic info/links
+* Fix current dependency on HTML5? (<aside> tag)
