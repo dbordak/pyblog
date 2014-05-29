@@ -43,3 +43,4 @@
 * Dedicated navigation page
   * Sidebar for basic info/links
 * Fix current dependency on HTML5? (<aside> tag)
+* About page

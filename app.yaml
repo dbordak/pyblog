@@ -14,10 +14,16 @@ handlers:
 - url: /img
   static_dir: static/img
 
-- url: /admin/.*
+- url: /admin
   script: blargh.application
   login: admin
 
+- url: /post/
+  script: blargh.application
+
+- url: /about
+  script: blargh.application
+  
 - url: /.*
   script: blargh.application
   
