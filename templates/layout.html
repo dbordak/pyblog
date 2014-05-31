@@ -31,17 +31,18 @@
           </a>
           <nav>
             {{ sidebar }}
-            <br><a href="/about/">About Me</a>
           </nav>
         </aside>
 
         <div id="content">
-          <h1>{{ heading }}</h1>
-          <p>{{ body }}</p>
+          {% block content %}
+			<h1>{{ title }}</h1>
+            {{ content }}
+          {% endblock %}
         </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
         <script src="/js/plugins.js"></script>
         <script src="/js/main.js"></script>
 

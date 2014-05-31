@@ -13,13 +13,10 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 def genSidebar(blog, user=None):
     """Generate the contents of the navigation sidebar."""
-    entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
-    entries = entry_query.fetch(10)
-    line = ['<a href=/"' + entry.title + '"/>' + entry.title + "</a>"
-            for entry in entries]
+    line = "This is a blog."
     if user and users.is_current_user_admin():
-        line.append('<br><a href="/admin/">Admin Page</a>')
-    return "<br>".join(line)
+        line += '<br><a href="/admin/">Admin Page</a>'
+    return line
 
 
 class MainPage(webapp2.RequestHandler):
@@ -49,7 +46,7 @@ class Manage(webapp2.RequestHandler):
             'sidebar': sidebar
         }
 
-        template = JINJA_ENVIRONMENT.get_template('templates/single.html')
+        template = JINJA_ENVIRONMENT.get_template('templates/layout.html')
         self.response.write(template.render(template_values))
 
     def post(self):
@@ -75,7 +72,7 @@ class About(webapp2.RequestHandler):
             'sidebar': sidebar
         }
 
-        template = JINJA_ENVIRONMENT.get_template('templates/single.html')
+        template = JINJA_ENVIRONMENT.get_template('templates/layout.html')
         self.response.write(template.render(template_values))
 
 
