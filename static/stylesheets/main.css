@@ -99,18 +99,18 @@ textarea {
 
 body {
     color: #073642;
-	background: #fdf6e3;
+    background: #fdf6e3;
     font-family: 'Source Sans Pro', sans-serif;
 }
 
 aside {
-	position: fixed;
-	width: 240px;
-	height: 100%;
-	top: 0;
-	left: 0;
-padding: 20px;
-	background: #eee8d5;
+    position: fixed;
+    width: 240px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    background: #eee8d5;
 }
 
 #content {
@@ -121,15 +121,15 @@ padding: 20px;
 }
 
 a {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 aside a {
-	color: #073642;
+    color: #073642;
 }
 
 aside a:hover {
-	color: #657b83;
+    color: #657b83;
 }
 
 /* ==========================================================================
