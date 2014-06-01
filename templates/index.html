@@ -27,8 +27,16 @@
             <img src="/img/lime.png" alt="Header Image" width="240px"/>
             <h1>Blargh</h1>
           </a>
+          <p>This is a blog.</p>
           <nav>
-            {{ sidebar }}
+            <a href="">A link</a><br>
+            <a href="">Another link</a><br>
+            <a href="">A third link</a><br>
+            <a href="/about">About</a><br>
+            <a href="">Page nav here?</a>
+            {% if isAdmin %}
+            <br><br><a href="/admin">Admin Page</a>
+            {% endif %}
           </nav>
         </aside>
 

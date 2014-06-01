@@ -11,21 +11,17 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 
-def genSidebar(blog, user=None):
-    """Generate the contents of the navigation sidebar."""
-    line = "This is a blog."
-    if user and users.is_current_user_admin():
-        line += '<br><a href="/admin/">Admin Page</a>'
-    return {'sidebar': line}
+def checkAdmin(blog, user=None):
+    return {'isAdmin': user and users.is_current_user_admin()}
 
 
 class MainPage(webapp2.RequestHandler):
     """List of blog entry summaries."""
     def get(self):
         blog = self.request.get('blog', 'blog')
-        template_values = genSidebar(blog, users.get_current_user())
-        entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
+        template_values = checkAdmin(blog, users.get_current_user())
 
+        entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
         template_values['entries'] = entry_query.fetch(10)
 
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
@@ -35,10 +31,9 @@ class MainPage(webapp2.RequestHandler):
 class AdminPage(webapp2.RequestHandler):
     """Administration panel for (adding? modifying?) entries"""
     def get(self):
-        template_values = genSidebar(self.request.get('blog', 'blog'))
-
+        # template_values = checkAdmin(self.request.get('blog', 'blog'))
         template = JINJA_ENVIRONMENT.get_template('templates/admin.html')
-        self.response.write(template.render(template_values))
+        self.response.write(template.render({}))
 
     def post(self):
         blog = self.request.get('blog', 'blog')
@@ -55,7 +50,7 @@ class AdminPage(webapp2.RequestHandler):
 class AboutPage(webapp2.RequestHandler):
     """About me page"""
     def get(self):
-        template_values = genSidebar(self.request.get('blog', 'blog'),
+        template_values = checkAdmin(self.request.get('blog', 'blog'),
                                      users.get_current_user())
 
         template = JINJA_ENVIRONMENT.get_template('templates/about.html')
@@ -64,7 +59,7 @@ class AboutPage(webapp2.RequestHandler):
 
 class Entry(ndb.Model):
     """Models a blog entry"""
-    title = ndb.StringProperty(indexed=False, required=True)
+    title = ndb.StringProperty(required=True)
     content = ndb.TextProperty(required=True)
     date = ndb.DateTimeProperty(auto_now_add=True, required=True)
     category = ndb.StringProperty(required=True)
