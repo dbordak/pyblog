@@ -44,8 +44,8 @@
           {% block content %}
             {% for entry in entries %}
               <article>
-                <h2><a href={{ entry.title }}>{{ entry.title }}</a></h2>
-                {{ entry.content }}
+                <h2><a href={{ entry.url }}>{{ entry.title }}</a></h2>
+                {{ entry.content|striptags()|truncate() }}
               </article>
             {% endfor %}
             <h1>{{ title }}</h1>

@@ -7,6 +7,7 @@ from google.appengine.api import users
 import webapp2
 import jinja2
 
+CATEGORIES = ('example', 'fruit', 'programming', 'headwear', 'music')
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
@@ -36,14 +37,16 @@ class AdminPage(webapp2.RequestHandler):
         self.response.write(template.render({}))
 
     def post(self):
-        blog = self.request.get('blog', 'blog')
+        req = self.request
         newEntry = Entry(parent=entry_key('blog'))
 
-        newEntry.title = self.request.get('title')
-        newEntry.content = self.request.get('content')
+        newEntry.title    = req.get('title')
+        newEntry.content  = req.get('content')
+        newEntry.category = req.get('category')
+        newEntry.subcat   = req.get('subcat')
         newEntry.put()
 
-        query_params = {'blog': blog}
+        query_params = {'blog': req.get('blog', 'blog')}
         self.redirect('/?' + urllib.urlencode(query_params))
 
 
@@ -59,11 +62,11 @@ class AboutPage(webapp2.RequestHandler):
 
 class Entry(ndb.Model):
     """Models a blog entry"""
-    title = ndb.StringProperty(required=True)
-    content = ndb.TextProperty(required=True)
-    date = ndb.DateTimeProperty(auto_now_add=True, required=True)
-    category = ndb.StringProperty(required=True)
-    subcat = ndb.StringProperty(required=True)
+    title = ndb.StringProperty('t', required=True)
+    content = ndb.TextProperty('c', required=True)
+    date = ndb.DateTimeProperty('d', auto_now_add=True, required=True)
+    category = ndb.StringProperty('cat', required=True, choices=CATEGORIES)
+    subcat = ndb.StringProperty('sc', required=True)
     # tags = ndb.StringProperty(repeated=True)
 
     @property
@@ -78,7 +81,8 @@ def entry_key(blog_name='blog'):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/admin', AdminPage)
-    #('/post/', EntryPage)
-    #('/about', AboutPage)
+    ('/admin', AdminPage),
+    #('/post/', EntryPage),
+    #('/cat/', CategoryPage),
+    ('/about', AboutPage)
 ], debug=True)
