@@ -14,8 +14,9 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class AddCategoryPage(webapp2.RequestHandler):
     """Administration panel for adding entries"""
     def get(self):
+        template_values = {'cats': models.Category.query()}
         template = JINJA_ENVIRONMENT.get_template('templates/admin/add_cat.html')
-        self.response.write(template.render({}))
+        self.response.write(template.render(template_values))
 
     def post(self):
         req = self.request
@@ -23,7 +24,7 @@ class AddCategoryPage(webapp2.RequestHandler):
 
         newCategory.name   = req.get('name')
         try:
-            newCategory.parent = ndb.Key('Category', req.get('parent'))
+            newCategory.parent = ndb.Key(urlsafe=req.get('parent'))
         except:
             pass
         newCategory.put()
@@ -35,8 +36,9 @@ class AddCategoryPage(webapp2.RequestHandler):
 class AddEntryPage(webapp2.RequestHandler):
     """Administration panel for adding entries"""
     def get(self):
+        template_values = {'cats': models.Category.query()}
         template = JINJA_ENVIRONMENT.get_template('templates/admin/add_ent.html')
-        self.response.write(template.render({}))
+        self.response.write(template.render(template_values))
 
     def post(self):
         req = self.request
@@ -44,7 +46,7 @@ class AddEntryPage(webapp2.RequestHandler):
 
         newEntry.title    = req.get('title')
         newEntry.content  = req.get('content')
-        newEntry.category = ndb.Key('Category', req.get('category'))
+        newEntry.category = ndb.Key(urlsafe=req.get('category'))
         newEntry.put()
 
         query_params = {'blog': req.get('blog', 'blog')}

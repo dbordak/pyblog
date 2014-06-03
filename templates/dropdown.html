@@ -1,0 +1,7 @@
+{% macro dropdown(iter, name) %}
+<select name={{ name }}>
+{% for item in iter %}
+  <option value="{{ item.key.urlsafe() }}">{{ item.name }}</option>
+{% endfor %}
+</select>
+{% endmacro %}
