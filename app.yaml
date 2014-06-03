@@ -14,8 +14,8 @@ handlers:
 - url: /img
   static_dir: static/img
 
-- url: /admin/
-  script: blargh.application
+- url: /admin/.*
+  script: admin.application
   login: admin
 
 - url: /.*
