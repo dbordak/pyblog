@@ -5,21 +5,29 @@ from urllib import urlencode
 from google.appengine.api import users
 import webapp2
 import jinja2
+import logging
 from models import Entry, entry_key
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(dirname(__file__)))
 
 
-def checkAdmin(blog, user=None):
+def checkAdmin(user=None):
     return {'isAdmin': user and users.is_current_user_admin()}
+
+
+def handle404(request, response, exception):
+    logging.exception(exception)
+    template_values = checkAdmin(users.get_current_user())
+    template = JINJA_ENVIRONMENT.get_template('templates/404.html')
+    response.write(template.render(template_values))
 
 
 class MainPage(webapp2.RequestHandler):
     """List of blog entry summaries."""
     def get(self):
         blog = self.request.get('blog', 'blog')
-        template_values = checkAdmin(blog, users.get_current_user())
+        template_values = checkAdmin(users.get_current_user())
 
         entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
         template_values['entries'] = entry_query.fetch(10)
@@ -52,8 +60,7 @@ class AdminPage(webapp2.RequestHandler):
 class AboutPage(webapp2.RequestHandler):
     """About me page"""
     def get(self):
-        template_values = checkAdmin(self.request.get('blog', 'blog'),
-                                     users.get_current_user())
+        template_values = checkAdmin(users.get_current_user())
 
         template = JINJA_ENVIRONMENT.get_template('templates/about.html')
         self.response.write(template.render(template_values))
@@ -61,8 +68,10 @@ class AboutPage(webapp2.RequestHandler):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/admin', AdminPage),
+    ('/admin/add', AdminPage),
     #('/post/', EntryPage),
     #('/cat/', CategoryPage),
     ('/about', AboutPage)
 ], debug=True)
+
+application.error_handlers[404] = handle404
