@@ -1,3 +1,4 @@
+{% from "templates/dropdown.html" import dropdown %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -31,7 +32,8 @@
           <nav>
             <a href="">A link</a><br>
             <a href="">Another link</a><br>
-            <a href="">A third link</a><br>
+            <label for="category">Category: </label>
+            {{ dropdown(cats, "category") }}<br>
             <a href="/about">About</a><br>
             <a href="">Page nav here?</a>
             {% if isAdmin %}

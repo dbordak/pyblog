@@ -12,13 +12,16 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(dirname(__file__)))
 
 
-def checkAdmin(user=None):
-    return {'isAdmin': user and users.is_current_user_admin()}
+def genSidebar(user=None):
+    return {
+        'isAdmin': user and users.is_current_user_admin(),
+        'cats': models.Category.query()
+    }
 
 
 def handle404(request, response, exception):
     logging.exception(exception)
-    template_values = checkAdmin(users.get_current_user())
+    template_values = genSidebar(users.get_current_user())
     template = JINJA_ENVIRONMENT.get_template('templates/404.html')
     response.write(template.render(template_values))
 
@@ -27,7 +30,7 @@ class MainPage(webapp2.RequestHandler):
     """List of blog entry summaries."""
     def get(self):
         blog = self.request.get('blog', 'blog')
-        template_values = checkAdmin(users.get_current_user())
+        template_values = genSidebar(users.get_current_user())
 
         entry_query = models.Entry.query().order(-models.Entry.date)
         template_values['entries'] = entry_query.fetch(10)
@@ -39,7 +42,7 @@ class MainPage(webapp2.RequestHandler):
 class AboutPage(webapp2.RequestHandler):
     """About me page"""
     def get(self):
-        template_values = checkAdmin(users.get_current_user())
+        template_values = genSidebar(users.get_current_user())
 
         template = JINJA_ENVIRONMENT.get_template('templates/about.html')
         self.response.write(template.render(template_values))
