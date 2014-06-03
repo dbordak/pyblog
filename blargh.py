@@ -79,7 +79,8 @@ class EntryPage(webapp2.RequestHandler):
 
             template = JINJA_ENVIRONMENT.get_template('templates/entry.html')
             self.response.write(template.render(template_values))
-
+        else:
+            return webapp2.redirect(ent.url, permanent=True)
 
 class AboutPage(webapp2.RequestHandler):
     """About me page"""
