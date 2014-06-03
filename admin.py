@@ -58,7 +58,9 @@ class AddEntryPage(webapp2.RequestHandler):
         req = self.request
         newEntry = models.Entry()
 
-        newEntry.title   = req.get('title')
+        newEntry.title = req.get('title')
+        if newEntry.title == "":
+            newEntry.title = "Untitled"
         newEntry.content = req.get('content')
         cat = req.get('category')
         if cat != "":

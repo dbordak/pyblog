@@ -1,5 +1,14 @@
 {% extends "templates/index.html" %}
 {% from "templates/dropdown.html" import dropdown %}
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+  <script type="text/javascript">
+    tinymce.init({
+    selector: "textarea"
+    });
+  </script>
+{% endblock %}
 {% block content %}
 <h1>Add Entry</h1>
 <form action="" method="post">
@@ -16,7 +25,7 @@
   <br>
 
   <label for="content">Content:</label><br>
-  <textarea name="content" rows="10" cols="90"></textarea>
+  <textarea name="content"></textarea>
   <br>
   <input type="submit" value="Submit">
 </form>
