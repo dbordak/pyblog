@@ -4,7 +4,7 @@ from urllib import urlencode
 from google.appengine.ext import ndb
 import webapp2
 import models
-from blargh import handle404, JINJA_ENVIRONMENT, genSidebar
+from blargh import handle404, handle500, JINJA_ENVIRONMENT, genSidebar
 
 
 class AddCategoryPage(webapp2.RequestHandler):
@@ -105,3 +105,4 @@ application = webapp2.WSGIApplication([
 ], debug=True)
 
 application.error_handlers[404] = handle404
+#application.error_handlers[500] = handle500

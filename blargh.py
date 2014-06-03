@@ -22,8 +22,15 @@ def genSidebar(user=None):
 def handle404(request, response, exception):
     logging.exception(exception)
     template_values = genSidebar(users.get_current_user())
-    template = JINJA_ENVIRONMENT.get_template('templates/404.html')
+    template = JINJA_ENVIRONMENT.get_template('templates/errors/404.html')
     response.write(template.render(template_values))
+
+
+def handle500(request, response, exception):
+    logging.exception(exception)
+    template = JINJA_ENVIRONMENT.get_template('templates/errors/500.html')
+    # Don't render anything in case it caused the 500
+    response.write(template.render({}))
 
 
 class MainPage(webapp2.RequestHandler):
@@ -60,6 +67,12 @@ class CategoryPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
+class EntryPage(webapp2.RequestHandler):
+    """Individual blog post page"""
+    def get(self, year, month, title, entsafe):
+        a = 4/0
+        pass
+
 class AboutPage(webapp2.RequestHandler):
     """About me page"""
     def get(self):
@@ -71,9 +84,11 @@ class AboutPage(webapp2.RequestHandler):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
-    #('/(\d{4})/(\d{2})/', EntryPage),
+    webapp2.Route('/<year:\d{4}>/<month:\d{2}>/<title>/<entsafe>',
+                  handler=EntryPage),
     webapp2.Route('/cat/<catsafe>', handler=CategoryPage),
     ('/about', AboutPage)
 ], debug=True)
 
 application.error_handlers[404] = handle404
+#application.error_handlers[500] = handle500
