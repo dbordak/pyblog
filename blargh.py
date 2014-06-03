@@ -37,11 +37,10 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
-class AdminPage(webapp2.RequestHandler):
-    """Administration panel for (adding? modifying?) entries"""
+class AddEntryPage(webapp2.RequestHandler):
+    """Administration panel for adding entries"""
     def get(self):
-        # template_values = checkAdmin(self.request.get('blog', 'blog'))
-        template = JINJA_ENVIRONMENT.get_template('templates/admin.html')
+        template = JINJA_ENVIRONMENT.get_template('templates/admin/add_ent.html')
         self.response.write(template.render({}))
 
     def post(self):
@@ -57,6 +56,13 @@ class AdminPage(webapp2.RequestHandler):
         self.redirect('/?' + urlencode(query_params))
 
 
+class AdminNavPage(webapp2.RequestHandler):
+    """Navigation page for administrative tasks."""
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/admin/nav.html')
+        self.response.write(template.render({}))
+
+
 class AboutPage(webapp2.RequestHandler):
     """About me page"""
     def get(self):
@@ -68,8 +74,10 @@ class AboutPage(webapp2.RequestHandler):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/admin/add', AdminPage),
-    #('/post/', EntryPage),
+    ('/admin/', AdminNavPage),
+    ('/admin/add/ent', AddEntryPage),
+    #('/admin/add/cat', AddCategoryPage),
+    #('/(\d{4})/(\d{2})/(\d{2})/', EntryPage),
     #('/cat/', CategoryPage),
     ('/about', AboutPage)
 ], debug=True)
