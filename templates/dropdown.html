@@ -1,5 +1,5 @@
-{% macro dropdown(iter, name) %}
-<select name={{ name }}>
+{% macro dropdown(iter, name, onchange="", id="") %}
+<select name={{ name }} onchange={{ onchange }} id={{ id }}>
   <option value="">---</option>
   {% for item in iter %}
   <option value="{{ item.key.urlsafe() }}">{{ item.name }}</option>

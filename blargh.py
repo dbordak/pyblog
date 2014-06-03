@@ -29,10 +29,21 @@ def handle404(request, response, exception):
 class MainPage(webapp2.RequestHandler):
     """List of blog entry summaries."""
     def get(self):
-        blog = self.request.get('blog', 'blog')
         template_values = genSidebar(users.get_current_user())
-
         entry_query = models.Entry.query().order(-models.Entry.date)
+        template_values['entries'] = entry_query.fetch(10)
+
+        template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+        self.response.write(template.render(template_values))
+
+
+class CategoryPage(webapp2.RequestHandler):
+    """List of blog entry summaries for a given category."""
+    def get(self, cat):
+        template_values = genSidebar(users.get_current_user())
+        entry_query = models.Entry.query(
+            models.Entry.category == ndb.Key(urlsafe=cat)
+        ).order(-models.Entry.date)
         template_values['entries'] = entry_query.fetch(10)
 
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
@@ -51,7 +62,7 @@ class AboutPage(webapp2.RequestHandler):
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     #('/(\d{4})/(\d{2})/', EntryPage),
-    #('/cat/', CategoryPage),
+    webapp2.Route('/cat/<cat>', handler=CategoryPage),
     ('/about', AboutPage)
 ], debug=True)
 
