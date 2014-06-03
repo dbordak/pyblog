@@ -3,10 +3,11 @@
 from os.path import dirname
 from urllib import urlencode
 from google.appengine.api import users
+from google.appengine.ext import ndb
 import webapp2
 import jinja2
 import logging
-from models import Entry, entry_key
+import models
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(dirname(__file__)))
@@ -29,7 +30,7 @@ class MainPage(webapp2.RequestHandler):
         blog = self.request.get('blog', 'blog')
         template_values = checkAdmin(users.get_current_user())
 
-        entry_query = Entry.query(ancestor=entry_key(blog)).order(-Entry.date)
+        entry_query = models.Entry.query().order(-models.Entry.date)
         template_values['entries'] = entry_query.fetch(10)
 
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
@@ -45,12 +46,11 @@ class AdminPage(webapp2.RequestHandler):
 
     def post(self):
         req = self.request
-        newEntry = Entry(parent=entry_key('blog'))
+        newEntry = models.Entry()
 
         newEntry.title    = req.get('title')
         newEntry.content  = req.get('content')
         newEntry.category = req.get('category')
-        newEntry.subcat   = req.get('subcat')
         newEntry.put()
 
         query_params = {'blog': req.get('blog', 'blog')}
