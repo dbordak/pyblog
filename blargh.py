@@ -39,10 +39,20 @@ class MainPage(webapp2.RequestHandler):
 
 class CategoryPage(webapp2.RequestHandler):
     """List of blog entry summaries for a given category."""
-    def get(self, cat):
+    def get(self, catsafe):
         template_values = genSidebar(users.get_current_user())
+
+        catk = ndb.Key(urlsafe=catsafe)
+        cat = catk.get()
+        subcats = []
+        if cat.parent == None:
+            subcats = [sc.key for sc in
+                       models.Category.query(
+                           models.Category.parent == catk
+                       ).fetch()]
+        subcats.append(catk)
         entry_query = models.Entry.query(
-            models.Entry.category == ndb.Key(urlsafe=cat)
+            models.Entry.category.IN(subcats)
         ).order(-models.Entry.date)
         template_values['entries'] = entry_query.fetch(10)
 
@@ -62,7 +72,7 @@ class AboutPage(webapp2.RequestHandler):
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     #('/(\d{4})/(\d{2})/', EntryPage),
-    webapp2.Route('/cat/<cat>', handler=CategoryPage),
+    webapp2.Route('/cat/<catsafe>', handler=CategoryPage),
     ('/about', AboutPage)
 ], debug=True)
 
