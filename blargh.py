@@ -37,6 +37,27 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
+class AddCategoryPage(webapp2.RequestHandler):
+    """Administration panel for adding entries"""
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/admin/add_cat.html')
+        self.response.write(template.render({}))
+
+    def post(self):
+        req = self.request
+        newCategory = models.Category()
+
+        newCategory.name   = req.get('name')
+        try:
+            newCategory.parent = ndb.Key('Category', req.get('parent'))
+        except:
+            pass
+        newCategory.put()
+
+        query_params = {'blog': req.get('blog', 'blog')}
+        self.redirect('/?' + urlencode(query_params))
+
+
 class AddEntryPage(webapp2.RequestHandler):
     """Administration panel for adding entries"""
     def get(self):
@@ -49,7 +70,7 @@ class AddEntryPage(webapp2.RequestHandler):
 
         newEntry.title    = req.get('title')
         newEntry.content  = req.get('content')
-        newEntry.category = req.get('category')
+        newEntry.category = ndb.Key('Category', req.get('category'))
         newEntry.put()
 
         query_params = {'blog': req.get('blog', 'blog')}
@@ -76,7 +97,7 @@ application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/admin/', AdminNavPage),
     ('/admin/add/ent', AddEntryPage),
-    #('/admin/add/cat', AddCategoryPage),
+    ('/admin/add/cat', AddCategoryPage),
     #('/(\d{4})/(\d{2})/(\d{2})/', EntryPage),
     #('/cat/', CategoryPage),
     ('/about', AboutPage)

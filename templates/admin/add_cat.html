@@ -1,0 +1,21 @@
+{% extends "templates/index.html" %}
+{% block content %}
+<h1>Add Category</h1>
+<form action="" method="post">
+  <table>
+  <tr>
+    <td><label for="name">Name: </label></td>
+    <td><input type="text" name="name"></td>
+  </tr>
+  <tr>
+    <td><label for="parent">Parent Category: </label></td>
+    <td><input type="text" name="parent"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><input type="submit" value="Submit"></td>
+  </tr>
+  </table>
+</form>
+
+{% endblock %}
