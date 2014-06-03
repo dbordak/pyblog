@@ -5,7 +5,6 @@ from google.appengine.ext import ndb
 class Category(ndb.Model):
     name = ndb.StringProperty('n', required=True)
     parent = ndb.KeyProperty('p', kind='Category')
-    parent = ndb.KeyProperty('p')
 
 
 class Entry(ndb.Model):
@@ -14,6 +13,11 @@ class Entry(ndb.Model):
     content = ndb.TextProperty('c', required=True)
     date = ndb.DateTimeProperty('d', auto_now_add=True, required=True)
     category = ndb.KeyProperty('cat', kind='Category')
+
+    # Alias name to title to manage Entries/Categories similarly
+    @property
+    def name(self):
+        return self.title
 
     # @property
     # def url(self):

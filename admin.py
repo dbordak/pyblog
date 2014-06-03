@@ -6,6 +6,7 @@ import webapp2
 import models
 from blargh import handle404, JINJA_ENVIRONMENT
 
+
 class AddCategoryPage(webapp2.RequestHandler):
     """Administration panel for adding categories"""
     def get(self):
@@ -26,6 +27,7 @@ class AddCategoryPage(webapp2.RequestHandler):
         query_params = {'blog': req.get('blog', 'blog')}
         self.redirect('/?' + urlencode(query_params))
 
+
 # TODO: CSRF, Wap, rewrite with Kay
 class DeleteCategoryPage(webapp2.RequestHandler):
     """Administration panel for deleting categories"""
@@ -43,6 +45,7 @@ class DeleteCategoryPage(webapp2.RequestHandler):
 
         query_params = {'blog': req.get('blog', 'blog')}
         self.redirect('/?' + urlencode(query_params))
+
 
 class AddEntryPage(webapp2.RequestHandler):
     """Administration panel for adding entries"""
@@ -66,6 +69,24 @@ class AddEntryPage(webapp2.RequestHandler):
         self.redirect('/?' + urlencode(query_params))
 
 
+class DeleteEntryPage(webapp2.RequestHandler):
+    """Administration panel for deleting entries"""
+    def get(self):
+        template_values = {'ents': models.Entry.query()}
+        template = JINJA_ENVIRONMENT.get_template('templates/admin/del_ent.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+        req = self.request
+
+        ent = req.get('entry')
+        if ent != "":
+            ndb.Key(urlsafe=ent).delete()
+
+        query_params = {'blog': req.get('blog', 'blog')}
+        self.redirect('/?' + urlencode(query_params))
+
+
 class NavPage(webapp2.RequestHandler):
     """Navigation page for administrative tasks."""
     def get(self):
@@ -76,6 +97,7 @@ class NavPage(webapp2.RequestHandler):
 application = webapp2.WSGIApplication([
     ('/admin/', NavPage),
     ('/admin/add/ent', AddEntryPage),
+    ('/admin/del/ent', DeleteEntryPage),
     ('/admin/add/cat', AddCategoryPage),
     ('/admin/del/cat', DeleteCategoryPage),
 ], debug=True)
