@@ -19,7 +19,11 @@ class Entry(ndb.Model):
     def name(self):
         return self.title
 
-    # @property
-    # def url(self):
-    #     return self.date.year + "/" + self.date.month + "/" + self.date.day
-    #     + "/" + quote_plus(self.title) + "-" + self.key.id()
+    @property
+    def title_safe(self):
+        return quote_plus(self.title)
+
+    @property
+    def url(self):
+        return "/{!s}/{!s}/{}/{}".format(self.date.year, self.date.month,
+                                         self.title_safe, self.key.urlsafe())

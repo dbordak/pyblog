@@ -51,12 +51,11 @@ class CategoryPage(webapp2.RequestHandler):
 
         catk = ndb.Key(urlsafe=catsafe)
         cat = catk.get()
-        subcats = []
-        if cat.parent == None:
-            subcats = [sc.key for sc in
-                       models.Category.query(
-                           models.Category.parent == catk
-                       ).fetch()]
+        subcats = [
+            sc.key for sc in models.Category.query(
+                models.Category.parent == catk
+            ).fetch()
+        ] if cat.parent == None else []
         subcats.append(catk)
         entry_query = models.Entry.query(
             models.Entry.category.IN(subcats)
@@ -70,8 +69,17 @@ class CategoryPage(webapp2.RequestHandler):
 class EntryPage(webapp2.RequestHandler):
     """Individual blog post page"""
     def get(self, year, month, title, entsafe):
-        a = 4/0
-        pass
+        template_values = genSidebar(users.get_current_user())
+
+        ent = ndb.Key(urlsafe=entsafe).get()
+        if (str(ent.date.month) == month and str(ent.date.year) == year and
+            ent.title_safe == title):
+            template_values['title'] = ent.title
+            template_values['content'] = ent.content
+
+            template = JINJA_ENVIRONMENT.get_template('templates/entry.html')
+            self.response.write(template.render(template_values))
+
 
 class AboutPage(webapp2.RequestHandler):
     """About me page"""
@@ -84,7 +92,7 @@ class AboutPage(webapp2.RequestHandler):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
-    webapp2.Route('/<year:\d{4}>/<month:\d{2}>/<title>/<entsafe>',
+    webapp2.Route('/<year:\d{4}>/<month:\d{1,2}>/<title>/<entsafe>',
                   handler=EntryPage),
     webapp2.Route('/cat/<catsafe>', handler=CategoryPage),
     ('/about', AboutPage)
