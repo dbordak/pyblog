@@ -53,8 +53,13 @@
                 {{ entry.content|striptags()|truncate() }}
               </article>
             {% endfor %}
-            <h1>{{ title }}</h1>
-            {{ content }}
+            {% if next_button %}
+              <hr>
+                <div id="botnav">
+                  <p style="float:left"><a href="/?cursor=">Newer(FIXME)</a></p>
+                  <p style="float:right"><a href="/?cursor={{ next_button }}">Older</a></p>
+                </div>
+            {% endif %}
           {% endblock %}
         </div>
 

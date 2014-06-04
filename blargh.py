@@ -1,24 +1,33 @@
 """What will eventually be a blog."""
 
 from google.appengine.api import users
+from google.appengine.datastore.datastore_query import Cursor
 import webapp2
 import models
 import util
 
 
-# TODO: Pagination
+def getPage(query, req):
+    curs = Cursor(urlsafe=req.get('cursor'))
+    entries, next_curs, more = query.fetch_page(10, start_cursor=curs)
+
+    button = next_curs.urlsafe() if more and next_curs else None
+    return (entries, button)
+
+
 class MainPage(webapp2.RequestHandler):
     """List of blog entry summaries."""
     def get(self):
         template_values = util.genSidebar(users.get_current_user())
         entry_query = models.Entry.query().order(-models.Entry.date)
-        template_values['entries'] = entry_query.fetch(10)
+
+        template_values['entries'], template_values['next_button'] = getPage(
+            entry_query, self.request)
 
         template = util.jinja_template('index')
         self.response.write(template.render(template_values))
 
 
-# TODO: Pagination
 class CategoryPage(webapp2.RequestHandler):
     """List of blog entry summaries for a given category, plus any
     child categories."""
@@ -36,7 +45,9 @@ class CategoryPage(webapp2.RequestHandler):
         entry_query = models.Entry.query(
             models.Entry.category.IN(subcats)
         ).order(-models.Entry.date)
-        template_values['entries'] = entry_query.fetch(10)
+
+        template_values['entries'], template_values['next_button'] = getPage(
+            entry_query, self.request)
 
         template = util.jinja_template('index')
         self.response.write(template.render(template_values))
