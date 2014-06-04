@@ -7,9 +7,9 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      {% block head %}
-        <title>Pyblog</title>
-      {% endblock %}
+          {% block head %}
+            <title>Pyblog</title>
+          {% endblock %}
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -31,13 +31,14 @@
             <h1>Blargh</h1>
           </a>
           <p>This is a blog.</p>
+          <hr class="section" id="navsep_t"/>
           <nav>
             <a href="">A link</a><br/>
             <a href="">Another link</a>
             <br/><br/>
             <label for="sidebar_category">Category: </label><br/>
             {{ dropdown(cats, "sidebar_category", "toCategoryPage()", "side_dd") }}
-            <br/><br/>
+            <hr class="section" id="navsep_b"/>
             <a href="/about">About</a>
             {% if isAdmin %}
               <br><a href="/admin/">Admin Page</a>
@@ -50,11 +51,11 @@
             {% for entry in entries %}
               <article>
                 <h2><a href={{ entry.url }}>{{ entry.title }}</a></h2>
-                {{ entry.content|striptags()|truncate() }}
+                <p>{{ entry.content|striptags()|truncate() }}</p>
               </article>
             {% endfor %}
           {% endblock %}
-          <hr/>
+          <hr id="footersep"/>
           {% block footer %}
             {% if buttons %}
               <div id="botnav">
