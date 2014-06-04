@@ -7,15 +7,15 @@ import models
 import util
 
 
-def getPage(query, req):
-    """Gets 10 items for a page, and the next cursor object for getting the
-    next page."""
+def getPage(query, req, qty=10):
+    """Gets items for constructing a page, and the next cursor object for
+    getting the next page."""
     qolder = query.order(-models.Entry.date)
     qnewer = query.order(models.Entry.date)
     curs = Cursor(urlsafe=req.get('cursor'))
 
-    entries, next_curs, more = qolder.fetch_page(10, start_cursor=curs)
-    _, prev_curs, less = qnewer.fetch_page(10, start_cursor=curs.reversed())
+    entries, next_curs, more = qolder.fetch_page(qty, start_cursor=curs)
+    _, prev_curs, less = qnewer.fetch_page(qty, start_cursor=curs.reversed())
 
     buttons = (
         prev_curs.urlsafe() if less and prev_curs else None,
