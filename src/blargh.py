@@ -24,6 +24,15 @@ def getPage(query, req, qty=10):
     return (entries, buttons)
 
 
+# TODO: This function.
+def badGetPage(query, req, qty=10):
+    """Like getPage except bad."""
+    qolder = query.order(-models.Entry.date)
+    entries = qolder.fetch(10)
+
+    return (entries, None)
+
+
 class MainPage(webapp2.RequestHandler):
     """List of blog entry summaries."""
     def get(self):
@@ -44,19 +53,25 @@ class CategoryPage(webapp2.RequestHandler):
         template_values = util.genSidebar(users.get_current_user())
         cat = models.Category.get_by_id(int(catid))
 
-        # Find all child categories when we're looking at a parentless key.
-        subcats = models.Category.query(
-            models.Category.parent == cat.key
-        ).fetch(keys_only=True) if (cat.parent is None) else []
-        # ...Plus the key itself.
-        subcats.append(cat.key)
+        if cat.parent is None:
+            subcats = models.Category.query(
+                models.Category.parent == cat.key
+            ).fetch(keys_only=True)
+            subcats.append(cat.key)
 
-        entry_query = models.Entry.query(
-            models.Entry.category.IN(subcats)
-        ).order(-models.Entry.date)
+            entry_query = models.Entry.query(
+                models.Entry.category.IN(subcats)
+            ).order(-models.Entry.date)
 
-        template_values['entries'], template_values['buttons'] = getPage(
-            entry_query, self.request)
+            template_values['entries'], template_values['buttons'] = badGetPage(
+                entry_query, self.request)
+        else:
+            entry_query = models.Entry.query(
+                models.Entry.category == cat.key
+            ).order(-models.Entry.date)
+
+            template_values['entries'], template_values['buttons'] = getPage(
+                entry_query, self.request)
 
         template = util.jinja_template('index')
         self.response.write(template.render(template_values))
