@@ -89,15 +89,3 @@ class AboutPage(webapp2.RequestHandler):
 
         template = util.jinja_template('about')
         self.response.write(template.render(template_values))
-
-
-application = webapp2.WSGIApplication([
-    ('/', MainPage),
-    webapp2.Route('/<year:\d{4}>/<month:\d{1,2}>/<title>/<entid>',
-                  handler=EntryPage),
-    webapp2.Route('/cat/<catid>', handler=CategoryPage),
-    ('/about', AboutPage)
-], debug=True)
-
-application.error_handlers[404] = util.handle404
-# application.error_handlers[500] = util.handle500

@@ -100,15 +100,3 @@ class NavPage(webapp2.RequestHandler):
         template_values = util.genSidebar()
         template = admin_template('nav')
         self.response.write(template.render(template_values))
-
-
-application = webapp2.WSGIApplication([
-    ('/admin/', NavPage),
-    ('/admin/add/ent', AddEntryPage),
-    ('/admin/del/ent', DeleteEntryPage),
-    ('/admin/add/cat', AddCategoryPage),
-    ('/admin/del/cat', DeleteCategoryPage),
-], debug=True)
-
-application.error_handlers[404] = util.handle404
-# application.error_handlers[500] = util.handle500

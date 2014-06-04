@@ -15,11 +15,11 @@ handlers:
   static_dir: static/img
 
 - url: /admin/.*
-  script: admin.application
+  script: routing.admin_app
   login: admin
 
 - url: /.*
-  script: blargh.application
+  script: routing.application
 
 libraries:
 - name: webapp2
