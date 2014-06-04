@@ -4,14 +4,14 @@ from urllib import urlencode
 from google.appengine.ext import ndb
 import webapp2
 import models
-from blargh import handle404, handle500, JINJA_ENVIRONMENT, genSidebar
+import util
 
 
 class AddCategoryPage(webapp2.RequestHandler):
     """Administration panel for adding categories"""
     def get(self):
-        template_values = genSidebar()
-        template = JINJA_ENVIRONMENT.get_template('templates/admin/add_cat.html')
+        template_values = util.genSidebar()
+        template = util.jinja_template('templates/admin/add_cat.html')
         self.response.write(template.render(template_values))
 
     def post(self):
@@ -32,8 +32,8 @@ class AddCategoryPage(webapp2.RequestHandler):
 class DeleteCategoryPage(webapp2.RequestHandler):
     """Administration panel for deleting categories"""
     def get(self):
-        template_values = genSidebar()
-        template = JINJA_ENVIRONMENT.get_template('templates/admin/del_cat.html')
+        template_values = util.genSidebar()
+        template = util.jinja_template('templates/admin/del_cat.html')
         self.response.write(template.render(template_values))
 
     def post(self):
@@ -50,8 +50,8 @@ class DeleteCategoryPage(webapp2.RequestHandler):
 class AddEntryPage(webapp2.RequestHandler):
     """Administration panel for adding entries"""
     def get(self):
-        template_values = genSidebar()
-        template = JINJA_ENVIRONMENT.get_template('templates/admin/add_ent.html')
+        template_values = util.genSidebar()
+        template = util.jinja_template('templates/admin/add_ent.html')
         self.response.write(template.render(template_values))
 
     def post(self):
@@ -74,9 +74,9 @@ class AddEntryPage(webapp2.RequestHandler):
 class DeleteEntryPage(webapp2.RequestHandler):
     """Administration panel for deleting entries"""
     def get(self):
-        template_values = genSidebar()
+        template_values = util.genSidebar()
         template_values['ents'] = models.Entry.query()
-        template = JINJA_ENVIRONMENT.get_template('templates/admin/del_ent.html')
+        template = util.jinja_template('templates/admin/del_ent.html')
         self.response.write(template.render(template_values))
 
     def post(self):
@@ -93,8 +93,8 @@ class DeleteEntryPage(webapp2.RequestHandler):
 class NavPage(webapp2.RequestHandler):
     """Navigation page for administrative tasks."""
     def get(self):
-        template_values = genSidebar()
-        template = JINJA_ENVIRONMENT.get_template('templates/admin/nav.html')
+        template_values = util.genSidebar()
+        template = util.jinja_template('templates/admin/nav.html')
         self.response.write(template.render(template_values))
 
 
@@ -106,5 +106,5 @@ application = webapp2.WSGIApplication([
     ('/admin/del/cat', DeleteCategoryPage),
 ], debug=True)
 
-application.error_handlers[404] = handle404
-#application.error_handlers[500] = handle500
+application.error_handlers[404] = util.handle404
+#application.error_handlers[500] = util.handle500
