@@ -32,15 +32,15 @@
           </a>
           <p>This is a blog.</p>
           <nav>
-            <a href="">A link</a><br>
+            <a href="">A link</a><br/>
             <a href="">Another link</a>
-            <br><br>
-            <label for="sidebar_category">Category: </label><br>
+            <br/><br/>
+            <label for="sidebar_category">Category: </label><br/>
             {{ dropdown(cats, "sidebar_category", "toCategoryPage()", "side_dd") }}
-            <br><br>
+            <br/><br/>
             <a href="/about">About</a>
             {% if isAdmin %}
-            <br><a href="/admin/">Admin Page</a>
+              <br><a href="/admin/">Admin Page</a>
             {% endif %}
           </nav>
         </aside>
@@ -53,12 +53,22 @@
                 {{ entry.content|striptags()|truncate() }}
               </article>
             {% endfor %}
-            {% if next_button %}
-              <hr>
-                <div id="botnav">
-                  <p style="float:left"><a href="/?cursor=">Newer(FIXME)</a></p>
-                  <p style="float:right"><a href="/?cursor={{ next_button }}">Older</a></p>
-                </div>
+          {% endblock %}
+          <hr/>
+          {% block footer %}
+            {% if buttons %}
+              <div id="botnav">
+                {% if buttons[0] %}
+                  <p style="float:left">
+                    <a href="/?cursor={{ buttons[0] }}">Newer</a>
+                  </p>
+                {% endif %}
+                {% if buttons[1] %}
+                  <p style="float:right">
+                    <a href="/?cursor={{ buttons[1] }}">Older</a>
+                  </p>
+                {% endif %}
+              </div>
             {% endif %}
           {% endblock %}
         </div>

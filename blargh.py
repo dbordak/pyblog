@@ -8,20 +8,29 @@ import util
 
 
 def getPage(query, req):
+    """Gets 10 items for a page, and the next cursor object for getting the
+    next page."""
+    qolder = query.order(-models.Entry.date)
+    qnewer = query.order(models.Entry.date)
     curs = Cursor(urlsafe=req.get('cursor'))
-    entries, next_curs, more = query.fetch_page(10, start_cursor=curs)
 
-    button = next_curs.urlsafe() if more and next_curs else None
-    return (entries, button)
+    entries, next_curs, more = qolder.fetch_page(10, start_cursor=curs)
+    _, prev_curs, less = qnewer.fetch_page(10, start_cursor=curs.reversed())
+
+    buttons = (
+        prev_curs.urlsafe() if less and prev_curs else None,
+        next_curs.urlsafe() if more and next_curs else None
+    )
+    return (entries, buttons)
 
 
 class MainPage(webapp2.RequestHandler):
     """List of blog entry summaries."""
     def get(self):
         template_values = util.genSidebar(users.get_current_user())
-        entry_query = models.Entry.query().order(-models.Entry.date)
+        entry_query = models.Entry.query()
 
-        template_values['entries'], template_values['next_button'] = getPage(
+        template_values['entries'], template_values['buttons'] = getPage(
             entry_query, self.request)
 
         template = util.jinja_template('index')
@@ -46,7 +55,7 @@ class CategoryPage(webapp2.RequestHandler):
             models.Entry.category.IN(subcats)
         ).order(-models.Entry.date)
 
-        template_values['entries'], template_values['next_button'] = getPage(
+        template_values['entries'], template_values['buttons'] = getPage(
             entry_query, self.request)
 
         template = util.jinja_template('index')
