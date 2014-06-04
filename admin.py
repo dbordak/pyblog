@@ -19,9 +19,14 @@ class AddCategoryPage(webapp2.RequestHandler):
         newCategory = models.Category()
 
         newCategory.name = req.get('name')
-        par = req.get('parent')
-        if par != "":
-            newCategory.parent = ndb.Key(urlsafe=par)
+        parsafe = req.get('parent')
+        if parsafe != "":
+            park = ndb.Key(urlsafe=parsafe)
+            if park.get().parent:
+                # TODO: Warning that parent already has parent.
+                pass
+            else:
+                newCategory.parent = park
         newCategory.put()
 
         query_params = {'blog': req.get('blog', 'blog')}
@@ -107,4 +112,4 @@ application = webapp2.WSGIApplication([
 ], debug=True)
 
 application.error_handlers[404] = util.handle404
-#application.error_handlers[500] = util.handle500
+# application.error_handlers[500] = util.handle500

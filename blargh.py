@@ -8,6 +8,7 @@ import models
 import util
 
 
+# TODO: Pagination
 class MainPage(webapp2.RequestHandler):
     """List of blog entry summaries."""
     def get(self):
@@ -19,19 +20,18 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
+# TODO: Pagination
 class CategoryPage(webapp2.RequestHandler):
     """List of blog entry summaries for a given category."""
     def get(self, catsafe):
         template_values = util.genSidebar(users.get_current_user())
-
         catk = ndb.Key(urlsafe=catsafe)
-        cat = catk.get()
-        subcats = [
-            sc.key for sc in models.Category.query(
-                models.Category.parent == catk
-            ).fetch()
-        ] if cat.parent == None else []
+
+        subcats = models.Category.query(
+            models.Category.parent == catk
+        ).fetch(keys_only=True) if (catk.get().parent == None) else []
         subcats.append(catk)
+
         entry_query = models.Entry.query(
             models.Entry.category.IN(subcats)
         ).order(-models.Entry.date)
@@ -75,4 +75,4 @@ application = webapp2.WSGIApplication([
 ], debug=True)
 
 application.error_handlers[404] = util.handle404
-#application.error_handlers[500] = util.handle500
+# application.error_handlers[500] = util.handle500
