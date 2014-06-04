@@ -1,9 +1,7 @@
 """What will eventually be a blog."""
 
 from google.appengine.api import users
-from google.appengine.ext import ndb
 import webapp2
-import jinja2
 import models
 import util
 
@@ -16,20 +14,23 @@ class MainPage(webapp2.RequestHandler):
         entry_query = models.Entry.query().order(-models.Entry.date)
         template_values['entries'] = entry_query.fetch(10)
 
-        template = util.jinja_template('templates/index.html')
+        template = util.jinja_template('index')
         self.response.write(template.render(template_values))
 
 
 # TODO: Pagination
 class CategoryPage(webapp2.RequestHandler):
-    """List of blog entry summaries for a given category."""
+    """List of blog entry summaries for a given category, plus any
+    child categories."""
     def get(self, catid):
         template_values = util.genSidebar(users.get_current_user())
         cat = models.Category.get_by_id(int(catid))
 
+        # Find all child categories when we're looking at a parentless key.
         subcats = models.Category.query(
             models.Category.parent == cat.key
-        ).fetch(keys_only=True) if (cat.parent == None) else []
+        ).fetch(keys_only=True) if (cat.parent is None) else []
+        # ...Plus the key itself.
         subcats.append(cat.key)
 
         entry_query = models.Entry.query(
@@ -37,7 +38,7 @@ class CategoryPage(webapp2.RequestHandler):
         ).order(-models.Entry.date)
         template_values['entries'] = entry_query.fetch(10)
 
-        template = util.jinja_template('templates/index.html')
+        template = util.jinja_template('index')
         self.response.write(template.render(template_values))
 
 
@@ -47,22 +48,26 @@ class EntryPage(webapp2.RequestHandler):
         template_values = util.genSidebar(users.get_current_user())
         ent = models.Entry.get_by_id(int(entid))
 
-        if (str(ent.date.month) == month and str(ent.date.year) == year and
-            ent.title_safe == title):
+        # TODO: Make this look nicer
+        if (
+            str(ent.date.month) == month and str(ent.date.year) == year
+            and ent.title_safe == title
+        ):
             template_values['title'] = ent.title
             template_values['content'] = ent.content
 
-            template = util.jinja_template('templates/entry.html')
+            template = util.jinja_template('entry')
             self.response.write(template.render(template_values))
         else:
             return webapp2.redirect(ent.url, permanent=True)
+
 
 class AboutPage(webapp2.RequestHandler):
     """About me page"""
     def get(self):
         template_values = util.genSidebar(users.get_current_user())
 
-        template = util.jinja_template('templates/about.html')
+        template = util.jinja_template('about')
         self.response.write(template.render(template_values))
 
 
