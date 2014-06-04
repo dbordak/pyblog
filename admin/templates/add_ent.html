@@ -1,0 +1,15 @@
+{% extends "blargh/templates/index.html" %}
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+  <script type="text/javascript">
+    tinymce.init({
+    selector: "textarea"
+    });
+  </script>
+{% endblock %}
+{% block content %}
+<h1>Add Entry</h1>
+{{ form() }}
+
+{% endblock %}

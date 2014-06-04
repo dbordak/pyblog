@@ -1,8 +1,0 @@
-{% macro dropdown(iter, name, onchange="", id="") %}
-<select name={{ name }} onchange={{ onchange }} id={{ id }}>
-  <option value="">---</option>
-  {% for item in iter %}
-  <option value="{{ item.key.integer_id() }}">{{ item.name }}</option>
-  {% endfor %}
-</select>
-{% endmacro %}
