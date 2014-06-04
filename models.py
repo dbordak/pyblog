@@ -25,5 +25,7 @@ class Entry(ndb.Model):
 
     @property
     def url(self):
-        return "/{!s}/{!s}/{}/{}".format(self.date.year, self.date.month,
-                                         self.title_safe, self.key.urlsafe())
+        return "/{!s}/{!s}/{}/{!s}".format(
+            self.date.year, self.date.month,
+            self.title_safe, self.key.integer_id()
+        )

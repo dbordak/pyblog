@@ -23,14 +23,14 @@ class MainPage(webapp2.RequestHandler):
 # TODO: Pagination
 class CategoryPage(webapp2.RequestHandler):
     """List of blog entry summaries for a given category."""
-    def get(self, catsafe):
+    def get(self, catid):
         template_values = util.genSidebar(users.get_current_user())
-        catk = ndb.Key(urlsafe=catsafe)
+        cat = models.Category.get_by_id(int(catid))
 
         subcats = models.Category.query(
-            models.Category.parent == catk
-        ).fetch(keys_only=True) if (catk.get().parent == None) else []
-        subcats.append(catk)
+            models.Category.parent == cat.key
+        ).fetch(keys_only=True) if (cat.parent == None) else []
+        subcats.append(cat.key)
 
         entry_query = models.Entry.query(
             models.Entry.category.IN(subcats)
@@ -43,10 +43,10 @@ class CategoryPage(webapp2.RequestHandler):
 
 class EntryPage(webapp2.RequestHandler):
     """Individual blog post page"""
-    def get(self, year, month, title, entsafe):
+    def get(self, year, month, title, entid):
         template_values = util.genSidebar(users.get_current_user())
+        ent = models.Entry.get_by_id(int(entid))
 
-        ent = ndb.Key(urlsafe=entsafe).get()
         if (str(ent.date.month) == month and str(ent.date.year) == year and
             ent.title_safe == title):
             template_values['title'] = ent.title
@@ -68,9 +68,9 @@ class AboutPage(webapp2.RequestHandler):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
-    webapp2.Route('/<year:\d{4}>/<month:\d{1,2}>/<title>/<entsafe>',
+    webapp2.Route('/<year:\d{4}>/<month:\d{1,2}>/<title>/<entid>',
                   handler=EntryPage),
-    webapp2.Route('/cat/<catsafe>', handler=CategoryPage),
+    webapp2.Route('/cat/<catid>', handler=CategoryPage),
     ('/about', AboutPage)
 ], debug=True)
 

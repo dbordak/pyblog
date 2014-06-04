@@ -19,14 +19,14 @@ class AddCategoryPage(webapp2.RequestHandler):
         newCategory = models.Category()
 
         newCategory.name = req.get('name')
-        parsafe = req.get('parent')
-        if parsafe != "":
-            park = ndb.Key(urlsafe=parsafe)
-            if park.get().parent:
+        parid = req.get('parent')
+        if parid != "":
+            par = models.Category.get_by_id(int(parid))
+            if par.parent:
                 # TODO: Warning that parent already has parent.
                 pass
             else:
-                newCategory.parent = park
+                newCategory.parent = par.key
         newCategory.put()
 
         query_params = {'blog': req.get('blog', 'blog')}
@@ -44,9 +44,9 @@ class DeleteCategoryPage(webapp2.RequestHandler):
     def post(self):
         req = self.request
 
-        cat = req.get('category')
-        if cat != "":
-            ndb.Key(urlsafe=cat).delete()
+        catid = req.get('category')
+        if catid != "":
+            models.Category.get_by_id(int(catid)).key.delete()
 
         query_params = {'blog': req.get('blog', 'blog')}
         self.redirect('/?' + urlencode(query_params))
@@ -67,9 +67,9 @@ class AddEntryPage(webapp2.RequestHandler):
         if newEntry.title == "":
             newEntry.title = "Untitled"
         newEntry.content = req.get('content')
-        cat = req.get('category')
-        if cat != "":
-            newEntry.category = ndb.Key(urlsafe=cat)
+        catid = req.get('category')
+        if catid != "":
+            newEntry.category = models.Category.get_by_id(int(catid)).key
         newEntry.put()
 
         query_params = {'blog': req.get('blog', 'blog')}
@@ -87,9 +87,9 @@ class DeleteEntryPage(webapp2.RequestHandler):
     def post(self):
         req = self.request
 
-        ent = req.get('entry')
-        if ent != "":
-            ndb.Key(urlsafe=ent).delete()
+        entid = req.get('entry')
+        if entid != "":
+            models.Entry.get_by_id(int(entid)).key.delete()
 
         query_params = {'blog': req.get('blog', 'blog')}
         self.redirect('/?' + urlencode(query_params))
