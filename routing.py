@@ -1,8 +1,8 @@
 from webapp2 import WSGIApplication, Route
 from google.appengine.api import users
-import blargh
-import admin
-import util
+import src.blargh as blargh
+import src.admin as admin
+import src.util as util
 import logging
 
 
