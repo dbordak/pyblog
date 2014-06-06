@@ -2,6 +2,7 @@
 
 from google.appengine.api import users
 from werkzeug import redirect
+from kay.utils import render_to_response as render
 import models
 import util
 from common.util import genSidebar
@@ -14,7 +15,7 @@ def MainPage(request):
     template_values['entries'], template_values['buttons'] = util.getPage(
         models.Entry.query(), request)
 
-    return util.render('index', template_values)
+    return render('blargh/index.html', template_values)
 
 
 def CategoryPage(request, catid):
@@ -43,7 +44,7 @@ def CategoryPage(request, catid):
         template_values['entries'], template_values['buttons'] = util.getPage(
             entry_query, request)
 
-    return util.render('index', template_values)
+    return render('blargh/index.html', template_values)
 
 
 def EntryPage(request, year, month, title, entid):
@@ -59,7 +60,7 @@ def EntryPage(request, year, month, title, entid):
         template_values['title'] = ent.title
         template_values['content'] = ent.content
 
-        return util.render('entry', template_values)
+        return render('blargh/entry.html', template_values)
     else:
         return redirect(ent.url)
 
@@ -67,4 +68,4 @@ def EntryPage(request, year, month, title, entid):
 def AboutPage(request):
     """About me page"""
     template_values = genSidebar(users.get_current_user())
-    return util.render('about', template_values)
+    return render('blargh/about.html', template_values)

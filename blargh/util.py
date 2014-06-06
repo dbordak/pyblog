@@ -1,8 +1,5 @@
 from google.appengine.datastore.datastore_query import Cursor
-from common import util #jinja_template, genSidebar, render
 import models
-
-render = lambda x, y: util.render(util.jinja_template('blargh', x), y)
 
 
 def getPage(query, req, qty=10):

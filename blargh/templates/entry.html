@@ -1,7 +1,7 @@
-{% extends "blargh/templates/index.html" %}
+{% extends "blargh/index.html" %}
 {% block content %}
 <article>
   <h1>{{ title }}</h1>
-  {{ content }}
+  {{ content|safe }}
 </article>
 {% endblock %}

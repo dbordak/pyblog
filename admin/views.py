@@ -2,7 +2,7 @@
 
 from google.appengine.ext import ndb
 from werkzeug import redirect
-from kay.utils import url_for
+from kay.utils import url_for, render_to_response as render
 
 from blargh import models
 import forms
@@ -55,7 +55,7 @@ def AddEntryPage(request):
         return redirect(url_for('admin/index'))
 
     template_values['form'] = form.as_widget()
-    return util.render('add_ent', template_values)
+    return render('admin/add_ent.html', template_values)
 
 
 def DeleteEntryPage(request):
@@ -73,4 +73,4 @@ def DeleteEntryPage(request):
 def NavPage(request):
     """Navigation page for administrative tasks."""
     template_values = genSidebar()
-    return util.render('index', template_values)
+    return render('admin/index.html', template_values)

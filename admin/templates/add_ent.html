@@ -1,4 +1,4 @@
-{% extends "blargh/templates/index.html" %}
+{% extends "blargh/index.html" %}
 {% block head %}
   {{ super() }}
   <script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
@@ -10,6 +10,6 @@
 {% endblock %}
 {% block content %}
 <h1>Add Entry</h1>
-{{ form() }}
+{{ form()|safe }}
 
 {% endblock %}
